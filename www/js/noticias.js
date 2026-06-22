@@ -1,4 +1,4 @@
-const API_NOTICIAS = "https://diagnosis-passive-will-understand.trycloudflare.com/apis/cordova.php";
+const API_NOTICIAS = "https://limousines-lawsuit-lecture-belt.trycloudflare.com/backend_demo/cordova.php";
 
 
 $(document).ready(function () {
@@ -23,7 +23,7 @@ function obtenerNoticias() {
         } else {
             noticias.forEach(function (noticia) {
                 const imagen = noticia.imagen
-                    ? `<img src="https://diagnosis-passive-will-understand.trycloudflare.com/apis/uploads/${noticia.imagen}" class="img-fluid p-2" style="cursor: pointer;" alt="${noticia.titulo}">`
+                    ? `<img src="https://limousines-lawsuit-lecture-belt.trycloudflare.com/backend_demo/uploads/${noticia.imagen}" class="img-fluid p-2" style="cursor: pointer;" alt="${noticia.titulo}">`
                     : `<div class="bg-secondary text-white text-center py-5">Sin imagen</div>`;
 
                 tarjetas += `
@@ -53,3 +53,46 @@ function obtenerNoticias() {
         alert("Error de conexión: " + xhr.status + " - " + xhr.statusText);
     });
 }
+
+$("#form-noticia").submit(function (e) {
+    e.preventDefault();
+
+    
+
+    let datos = new FormData();
+
+    datos.append("guardarNoticia", 1);
+    datos.append("titulo", $("#txt-titulo").val());
+    datos.append("resumen", $("#txt-resumen").val());
+    datos.append("contenido", $("#txt-contenido").val());
+    datos.append("autor", $("#txt-autor").val());
+    datos.append("fecha", $("#date-fecha").val());
+
+    let imagen = $("#file-imagen")[0].files[0];
+
+    if (imagen) {
+        datos.append("imagen", imagen);
+    }
+
+    $.ajax({
+        url: API_NOTICIAS,
+        type: "POST",
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function (respuesta) {
+            console.log(respuesta);
+
+            alert("Noticia guardada correctamente");
+
+            $("#form-noticia")[0].reset();
+
+            obtenerNoticias();
+        },
+        error: function (xhr) {
+            alert("Error al guardar");
+            console.log(xhr.responseText);
+        }
+    });
+});
+
